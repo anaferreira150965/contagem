@@ -31,9 +31,9 @@ Identifique também 3 pontos fortes e 3 pontos fracos identificados a partir das
 
 Nome do produto: 
 Resumo das avaliações:
-Sentimento geral: 
-Pontos fortes: 
-Pontos fracos:
+Sentimento geral: [aqui deve ser POSITIVO, NEUTRO ou NEGATIVO]
+Pontos fortes: [3 bullet points]
+Pontos fracos: [3 bullet points]
 """
 
 prompt_usuario = carrega(f"./dados/avaliacoes-{nome_do_produto}.txt")
