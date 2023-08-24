@@ -48,4 +48,5 @@ dotenv.load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 lista_de_compras_por_cliente = carrega("./dados/lista_de_compras_10_clientes.csv")
-identifica_perfis(lista_de_compras_por_cliente)
+conteudo = identifica_perfis(lista_de_compras_por_cliente)
+print(conteudo)
