@@ -5,17 +5,29 @@ import dotenv
 dotenv.load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+prompt_sistema = """
+Você é um categorizador de produtos.
+Você deve escolher uma categoria da lista abaixo:
+##### Lista de categorias válidas
+Beleza
+Entretenimento
+Esportes
+Outros
+##### Exemplo
+bola de tenis
+Esportes
+"""
 
 resposta = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[
         {
-        "role": "system",
-        "content": "Você é um categorizador de produtos"
+          "role": "system",
+          "content": prompt_sistema
         },
         {
             "role": "user",
-            "content": "escova de dentes"
+            "content": "bola de tenis de mesa"
         }
     ],
     temperature=1,
