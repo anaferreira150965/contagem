@@ -1,7 +1,10 @@
 import openai
+import dotenv
+import os
 
+dotenv.load_dotenv()
 
-openai.api_key = "<sua-chave-aqui>"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 resposta = openai.ChatCompletion.create(
     model = "gpt-3.5-turbo",
     messages = [
@@ -15,5 +18,4 @@ resposta = openai.ChatCompletion.create(
         } 
     ]
 )
-
 print(resposta)
