@@ -32,9 +32,9 @@ def salva(nome_do_arquivo, conteudo):
 def identifica_perfis(lista_de_compras_por_cliente):
   print("1. Iniciando identificação de perfis")
   prompt_sistema = """
-Identifique o perfil de compra para cada cliente a seguir.
+  Identifique o perfil de compra para cada cliente a seguir.
 
-O formato de saída deve ser em JSON:
+  O formato de saída deve ser em JSON:
 
   {
     "clientes": [
@@ -64,7 +64,7 @@ O formato de saída deve ser em JSON:
   json_resultado = json.loads(conteudo)
   print("Finalizou identificação de perfis")
   return json_resultado
-
+    
 def recomenda_produtos(perfil, lista_de_produtos):
   print("2. Iniciando recomendação de produtos")
   prompt_sistema = f"""
@@ -91,18 +91,41 @@ def recomenda_produtos(perfil, lista_de_produtos):
   conteudo = resposta.choices[0].message.content
   print("2. Finalizando a recomendação de produtos")
   return conteudo
-    
+
+def escreve_email(recomendacoes):
+  print("3. Escrevendo e-mail de recomendação")
+  prompt_sistema = f"""
+   Escreva um e-mail recomendando os seguintes produtos para um cliente:
+  
+  {recomendacoes}
+  
+  O e-mail deve ter no máximo 3 parágrafos.
+  O tom deve ser amigável, informal e descontraído.
+  Trate o cliente como alguém próximo e conhecido. 
+  """
+
+  resposta = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+      {
+        "role": "system",
+        "content": prompt_sistema
+      }
+    ]
+  )
+
+  conteudo = resposta.choices[0].message.content
+  print("3. Finalizando a escrita do e-mail")
+  return conteudo
 
 dotenv.load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
 lista_de_produtos = carrega("./dados/lista_de_produtos.txt")
 lista_de_compras_por_cliente = carrega("./dados/lista_de_compras_10_clientes.csv")
 perfis = identifica_perfis(lista_de_compras_por_cliente)
-
 for cliente in perfis["clientes"]:
     nome_do_cliente = cliente["nome"]
     print(f"Iniciando recomendação para o cliente {nome_do_cliente}")
     recomendacoes = recomenda_produtos(cliente["perfil"], lista_de_produtos)
-    print(recomendacoes)
-    #email = escreve_email(recomendacoes)
+    email = escreve_email(recomendacoes)
+    salva(f"email-{nome_do_cliente}.txt", email)
