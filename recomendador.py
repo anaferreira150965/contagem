@@ -1,6 +1,18 @@
 import os
 import openai
 import dotenv
+import json
+
+#
+# *********************************************************
+#  Desafio: Gerador de e-mails de recomendação de produtos
+# *********************************************************
+#
+# 1. Identificar perfis a partir de uma lista de compras recentes por clientes
+# 2. Para cada cliente:
+#  2.1. Recomendar 3 produtos para o perfil a partir de uma lista de produtos
+#  2.2. Escrever um e-mail de recomendação dos produtos escolhidos com até 3 parágrafos
+#
 
 def carrega(nome_do_arquivo):
     try:
@@ -21,9 +33,16 @@ def identifica_perfis(lista_de_compras_por_cliente):
   prompt_sistema = """
 Identifique o perfil de compra para cada cliente a seguir.
 
-O formato de saída deve ser:
+O formato de saída deve ser em JSON:
 
-cliente - descreva o perfil do cliente em 3 palavras
+  {
+    "clientes": [
+      {
+        "nome": "nome do cliente",
+        "perfil": "descreva o perfil do cliente em 3 palavras"
+      }
+    ]
+  } 
   """
 
   resposta = openai.ChatCompletion.create(
@@ -41,12 +60,18 @@ cliente - descreva o perfil do cliente em 3 palavras
   )
 
   conteudo = resposta.choices[0].message.content
-  return conteudo
+  json_resultado = json.loads(conteudo)
+  return json_resultado
     
 
 dotenv.load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 lista_de_compras_por_cliente = carrega("./dados/lista_de_compras_10_clientes.csv")
-conteudo = identifica_perfis(lista_de_compras_por_cliente)
-print(conteudo)
+perfis = identifica_perfis(lista_de_compras_por_cliente)
+
+for perfil in perfis["clientes"]:
+    nome_do_cliente = perfil["nome"]
+    print(f"Iniciando recomendação para o cliente {nome_do_cliente}")
+    #recomendacoes = recomenda_produtos(perfil, lista_de_produtos)
+    #email = escreve_email(recomendacoes)
