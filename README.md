@@ -1,1 +1,1 @@
-"# python-chatgpt-chatbot-curso01" 
+## Curso 01: Python, ChatGPT e Chatbots
